@@ -16,15 +16,31 @@ class OnboardingIntroPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                '👔 AI Stilist Asistanınız',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/app_icon.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Your AI Stylist',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Text(
-                'Fotoğrafınızı ürün görselleriyle eşleştirerek anlık kıyafet denemeleri yapın. AI teknolojimiz vücut oranlarınızı ve kumaş detaylarını koruyarak güvenle alışveriş yapmanızı sağlar.',
+                'Create photorealistic try-ons by combining your portrait with product images. Our AI preserves body proportions and fabric details for confident shopping.',
                 style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 32),
@@ -33,27 +49,27 @@ class OnboardingIntroPage extends ConsumerWidget {
                   children: const <Widget>[
                     _IntroPoint(
                       icon: Icons.flash_on,
-                      title: '⚡ Hızlı Deneme',
+                      title: '⚡ Instant try-ons',
                       subtitle:
-                          'Stüdyo randevusuna gerek kalmadan saniyeler içinde stil önerileri alın.',
+                          'Get outfit previews in seconds without studio sessions or appointments.',
                     ),
                     _IntroPoint(
                       icon: Icons.auto_awesome,
-                      title: '✨ Kişiselleştirilmiş',
+                      title: '✨ Personalized',
                       subtitle:
-                          'Ölçülerinize ve tarz tercihinize göre optimize edilmiş öneriler.',
+                          'Recommendations optimized for your proportions and style preferences.',
                     ),
                     _IntroPoint(
                       icon: Icons.favorite,
-                      title: '❤️ Favorilerinizi Saklayın',
+                      title: '❤️ Save favorites',
                       subtitle:
-                          'Beğendiğiniz kombinleri kaydedip istediğiniz zaman erişin.',
+                          'Bookmark your favorite outfits and access them anytime.',
                     ),
                     _IntroPoint(
                       icon: Icons.shield_outlined,
-                      title: '🔒 Gizliliğiniz Güvende',
+                      title: '🔒 Privacy-first',
                       subtitle:
-                          'Görselleriniz şifrelenmiş şekilde saklanır, istediğiniz zaman silebilirsiniz.',
+                          'Your images are protected and can be erased at any moment.',
                     ),
                   ],
                 ),
@@ -63,10 +79,9 @@ class OnboardingIntroPage extends ConsumerWidget {
                 height: 56,
                 child: FilledButton(
                   onPressed: () => context.go('/onboarding/demographics'),
-                  child: const Text(
-                    'Başlayalım 🚀',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
+                  child: const Text('Continue 🚀',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../utils/constants.dart';
 
 import '../../../models/user_profile.dart';
 import '../../auth/application/auth_controller.dart';
@@ -33,24 +35,30 @@ class ProfilePage extends ConsumerWidget {
             ),
             Text(profile.email, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 24),
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  subscriptionActive ? Icons.verified : Icons.lock_outline,
-                ),
-                title: Text(
-                  subscriptionActive ? 'Premium active' : 'Free plan',
-                ),
-                subtitle: Text(
-                  subscriptionActive
-                      ? 'Unlimited try-ons and wardrobe history.'
-                      : 'Unlock premium to remove limits and access history.',
-                ),
-                trailing: TextButton(
-                  onPressed: () {},
-                  child: Text(subscriptionActive ? 'Manage' : 'Upgrade'),
-                ),
-              ),
+            FutureBuilder<int>(
+              future: _loadUsedTryOnCount(),
+              builder: (context, snapshot) {
+                final used = snapshot.data ?? 0;
+                final remaining = (AppConfig.freeTrialTryOnLimit - used).clamp(0, AppConfig.freeTrialTryOnLimit);
+                final subtitle = subscriptionActive
+                    ? 'Unlimited try-ons and wardrobe history.'
+                    : 'Free trial: $remaining of ${AppConfig.freeTrialTryOnLimit} try-ons remaining';
+                return Card(
+                  child: ListTile(
+                    leading: Icon(
+                      subscriptionActive ? Icons.verified : Icons.lock_outline,
+                    ),
+                    title: Text(
+                      subscriptionActive ? 'Premium active' : 'Free plan',
+                    ),
+                    subtitle: Text(subtitle),
+                    trailing: TextButton(
+                      onPressed: () => context.push('/paywall'),
+                      child: Text(subscriptionActive ? 'Manage' : 'Upgrade'),
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
             _StatRow(
@@ -125,6 +133,15 @@ class ProfilePage extends ConsumerWidget {
       case Gender.nonBinary:
         return 'Non-binary';
     }
+  }
+}
+
+Future<int> _loadUsedTryOnCount() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('used_try_on_count') ?? 0;
+  } catch (_) {
+    return 0;
   }
 }
 
