@@ -10,7 +10,7 @@ class AppConfig {
   static const String adaptyFreeTrialPlacementId = 'outfitly_free_trial';
   // Ücretsiz deneme hakkı
   static const int freeTrialTryOnLimit = 5;
-  // Demo: App Store/Adapty ürünleri hazır değilse sahte paywall kullan
-  static const bool enableDemoPaywall = true;
+  // Demo: App Store/Adapty ürünleri hazır değilse sahte paywall kullan (kapalı)
+  static const bool enableDemoPaywall = false;
   static const String falApiModel = 'fal-ai/try-on/v1';
 }
