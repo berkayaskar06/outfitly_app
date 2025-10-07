@@ -10,7 +10,7 @@ Outfitly, kullanıcı fotoğrafını ve ürün görselini tek tıkla birleştiri
 Önkoşullar
 - Flutter 3.35+, Dart 3.9+, Xcode/Android Studio
 - Node.js 20+, npm 10+
-- (Opsiyonel) cloudflared (tünel için)
+  
 
 ### 1) Backend
 ```bash
@@ -24,25 +24,21 @@ curl http://localhost:3000/health
 .env örneği (güncelleyin):
 ```
 PORT=3000
-APP_URL=https://YOUR_TUNNEL.trycloudflare.com
+APP_URL=http://localhost:3000
 DATABASE_PATH=./data/database.sqlite
 STORAGE_PATH=./uploads
 FALAI_API_KEY=YOUR_FAL_AI_KEY
 FALAI_MODEL=fal-ai/gemini-25-flash-image/edit
 ```
-Cloudflare tünel (ayrı terminal):
-```bash
-cloudflared tunnel --url http://localhost:3000
-```
+Not: Yarışma testi için tünel gerekmiyor; backend doğrudan localhost:3000 üzerinden çalışır.
 
 ### 2) Flutter Uygulaması
 ```bash
 cd virtual_try_on_app
 flutter pub get
-flutter run \
-  --dart-define=BACKEND_BASE_URL=https://YOUR_TUNNEL.trycloudflare.com
+flutter run --dart-define=BACKEND_BASE_URL=http://localhost:3000
 ```
-Not: `BACKEND_BASE_URL` her tünel değiştiğinde yeniden verilir. iOS cihazda Safari’den `/health` 200 dönmeli.
+Not: Cihaz gerçek cihaz ise bilgisayarın IP’sini verin: `http://192.168.x.x:3000`.
 
 ## Nasıl Çalışır
 1) Kayıt/Giriş (veya misafir) → onboarding → (opsiyonel) Adapty paywall.
@@ -51,7 +47,7 @@ Not: `BACKEND_BASE_URL` her tünel değiştiğinde yeniden verilir. iOS cihazda 
 4) Sonuç ekranı ve “Latest outfits” kısmı görseli gösterir; “Like/Dislike” işaretleyebilirsiniz.
 
 ## Önemli Detaylar
-- Görsel URL’leri: Backend, `APP_URL` localhost olsa bile isteğin `X-Forwarded-Host/Proto` başlıklarını dikkate alarak doğru (tünel) URL’yi döner. Cihazda “localhost” kırık linki olmaz.
+- Görsel URL’leri: Lokal testte `APP_URL=http://localhost:3000` yeterlidir.
 - Yükleme limiti: Multer 20 MB (iPhone fotoğrafları için güvenli).
 - Adapty: `virtual_try_on_app/lib/utils/constants.dart` içinde `adaptyApiKey` ve `adaptyPaywallPlacementId` ayarlayın. Demo mod (`enableDemoPaywall=true`) açıkken paywall CTA’sı onboarding’i geçer.
 - Base URL: `AppConfig.backendBaseUrl` derleme anında `--dart-define` ile gelir (tünel değiştikçe komutu yeniden verin).
@@ -64,10 +60,9 @@ Not: `BACKEND_BASE_URL` her tünel değiştiğinde yeniden verilir. iOS cihazda 
 - `GET /api/try-on/:id` — durum + `image_url`
 
 ## Sorun Giderme
-- 530/502 (Cloudflare):
+- Bağlantı sorunları:
   - Backend ayakta mı? `curl http://localhost:3000/health`
-  - Tünel doğru mu? `cloudflared ...` çıktı adresi ile uygulamadaki `BACKEND_BASE_URL` aynı olmalı.
-  - Backend `.env` → `APP_URL` tünel adresi olmalı. Değişince `npm run dev` ile yeniden başlatın.
+  - Mobil cihazdan testte base URL’i bilgisayar IP’siyle verin.
 - Görsel görünmüyor: Backend’i yeniden başlatın; response’taki `image_url` `https://<tünel>/uploads/...` olmalı.
 - iOS Paywall görünmüyor: Placement/Builder UI Adapty’de tanımlı mı? Tanımlı değilse uygulama otomatik custom paywall’a düşer.
 
