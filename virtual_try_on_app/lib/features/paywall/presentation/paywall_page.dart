@@ -102,9 +102,24 @@ class _PaywallPageState extends ConsumerState<PaywallPage> {
         await Adapty().logShowPaywall(paywall: paywall);
 
         // Ürünleri önceden çek (StoreKit cache için)
+        List<AdaptyPaywallProduct> preloadedProducts = [];
         try {
-          await Adapty().getPaywallProducts(paywall: paywall);
-        } catch (_) {}
+          preloadedProducts = await Adapty().getPaywallProducts(paywall: paywall);
+          debugPrint('Adapty preloaded products count: ${preloadedProducts.length}');
+        } catch (e) {
+          debugPrint('Adapty getPaywallProducts error (preload): $e');
+        }
+
+        // Eğer ürün yoksa AdaptyUI yerine doğrudan custom/demo paywall'a düş
+        if (preloadedProducts.isEmpty) {
+          setState(() {
+            _paywall = paywall;
+            _products = preloadedProducts;
+            _selectedProduct = null;
+            _isLoading = false;
+          });
+          return;
+        }
 
         // Eğer Paywall Builder konfigürasyonu varsa AdaptyUI ile göster
         if (paywall.hasViewConfiguration == true) {

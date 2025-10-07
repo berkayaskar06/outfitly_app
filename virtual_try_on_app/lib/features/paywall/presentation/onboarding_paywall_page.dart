@@ -15,7 +15,6 @@ class OnboardingPaywallPage extends ConsumerStatefulWidget {
 
 class _OnboardingPaywallPageState extends ConsumerState<OnboardingPaywallPage> {
   bool _loading = true;
-  String? _error;
 
   @override
   void initState() {
@@ -24,16 +23,15 @@ class _OnboardingPaywallPageState extends ConsumerState<OnboardingPaywallPage> {
   }
 
   Future<void> _presentAdapty() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+    setState(() => _loading = true);
     try {
       final paywall = await Adapty().getPaywallForDefaultAudience(
         placementId: AppConfig.adaptyPaywallPlacementId,
       );
       if (paywall == null) {
-        throw Exception('Paywall bulunamadı');
+        if (!mounted) return;
+        context.go('/paywall');
+        return;
       }
       await Adapty().logShowPaywall(paywall: paywall);
 
@@ -56,56 +54,25 @@ class _OnboardingPaywallPageState extends ConsumerState<OnboardingPaywallPage> {
         ));
         await AdaptyUI().presentPaywallView(view);
         if (!mounted) return;
-        setState(() => _loading = false);
         return;
       }
 
       // Builder yoksa özel sayfaya yönlendir
       if (!mounted) return;
       context.go('/paywall');
-    } on AdaptyError catch (e) {
-      setState(() {
-        _error = e.message ?? 'Adapty hatası';
-        _loading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _loading = false;
-      });
+    } on AdaptyError catch (_) {
+      if (!mounted) return;
+      context.go('/paywall');
+    } catch (_) {
+      if (!mounted) return;
+      context.go('/paywall');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Outfitly Premium')),
-      body: Center(
-        child: _loading
-            ? const CircularProgressIndicator()
-            : Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.error_outline, size: 48),
-                    const SizedBox(height: 12),
-                    Text(_error ?? 'Paywall açılamadı', textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      onPressed: _presentAdapty,
-                      child: const Text('Tekrar dene'),
-                    ),
-                    const SizedBox(height: 8),
-                    OutlinedButton(
-                      onPressed: () => context.go('/paywall'),
-                      child: const Text('Özel paywallı aç'),
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
+    // Bu sayfa artık UI göstermiyor, sadece AdaptyUI'yi açıp kapandığında yönlendiriyor.
+    return const SizedBox.shrink();
   }
 }
 
