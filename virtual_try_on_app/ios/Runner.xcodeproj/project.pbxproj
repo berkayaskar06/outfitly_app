@@ -17,6 +17,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		98C9BA40591A957F35EC4700 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E516B43C3FE3CB881D71907A /* Pods_RunnerTests.framework */; };
 		F060ADE42E945361000B415F /* StoreKit.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F060ADE32E945361000B415F /* StoreKit.storekit */; };
+		F060ADE62E959E2C000B415F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F060ADE52E959E2C000B415F /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		D3FBDDEEEC0B0B9A1B6CC977 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		E516B43C3FE3CB881D71907A /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F060ADE32E945361000B415F /* StoreKit.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = StoreKit.storekit; path = Runner/StoreKit.storekit; sourceTree = "<group>"; };
+		F060ADE52E959E2C000B415F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3245CFB5900CEE261D464AC6 /* Pods_Runner.framework in Frameworks */,
+				F060ADE62E959E2C000B415F /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +116,7 @@
 		59084580C4C8590EECDD87AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F060ADE52E959E2C000B415F /* StoreKit.framework */,
 				7C8E597DE8B4F9929ED23748 /* Pods_Runner.framework */,
 				E516B43C3FE3CB881D71907A /* Pods_RunnerTests.framework */,
 			);

@@ -50,7 +50,7 @@ class TryOnResultPage extends ConsumerWidget {
                       child: hasImage
                           ? CachedNetworkImage(
                               imageUrl: imageUrl,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Theme.of(
                                   context,

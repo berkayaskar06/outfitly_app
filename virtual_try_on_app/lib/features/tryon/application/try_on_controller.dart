@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../models/try_on_result.dart';
@@ -143,6 +144,12 @@ class TryOnController extends StateNotifier<TryOnState> {
       }
       
       state = state.copyWith(isLoading: false, result: result);
+      // Ücretsiz deneme sayacını artır (Paywall görünümü için)
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final used = prefs.getInt('used_try_on_count') ?? 0;
+        await prefs.setInt('used_try_on_count', used + 1);
+      } catch (_) {}
       return result;
     } catch (error) {
       state = state.copyWith(isLoading: false, error: error.toString());

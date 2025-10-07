@@ -37,18 +37,10 @@ class _OnboardingPaywallPageState extends ConsumerState<OnboardingPaywallPage> {
 
       if (paywall.hasViewConfiguration == true) {
         // Simülatörde Builder UI ürünleri yüklemeyebilir: önce ürünleri çek ve boşsa custom paywall'a git
+        // Simülatörde dahi AdaptyUI'yi göstermek için ürün kontrolünü yumuşat
         try {
-          final products = await Adapty().getPaywallProducts(paywall: paywall);
-          if (products.isEmpty) {
-            if (!mounted) return;
-            context.go('/paywall');
-            return;
-          }
-        } catch (_) {
-          if (!mounted) return;
-          context.go('/paywall');
-          return;
-        }
+          await Adapty().getPaywallProducts(paywall: paywall);
+        } catch (_) {}
 
         final view = await AdaptyUI().createPaywallView(
           paywall: paywall,

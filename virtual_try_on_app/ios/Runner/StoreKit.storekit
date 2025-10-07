@@ -14,26 +14,13 @@
 
   ],
   "products" : [
-    {
-      "displayPrice" : "0",
-      "familyShareable" : false,
-      "internalID" : "51A4481C",
-      "localizations" : [
-        {
-          "description" : "",
-          "displayName" : "",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "com.outfitly",
-      "referenceName" : "outfitly adopty",
-      "type" : "Consumable"
-    }
+
   ],
   "settings" : {
     "_failTransactionsEnabled" : false,
-    "_locale" : "tr",
-    "_storefront" : "TUR",
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
     "_storeKitErrors" : [
       {
         "current" : null,
@@ -83,7 +70,48 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "3DF36BEF",
+      "localizations" : [
 
+      ],
+      "name" : "outfitly_premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "7070575D",
+          "introductoryOffer" : {
+            "displayPrice" : "0.99",
+            "internalID" : "6763DBEC",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.outfitly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "outfitly_premium",
+          "subscriptionGroupID" : "3DF36BEF",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 4,

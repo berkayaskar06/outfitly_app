@@ -1,8 +1,11 @@
 class AppConfig {
   const AppConfig._();
 
-  // Force localhost for all requests (ignore dart-define)
-  static const String backendBaseUrl = 'http://localhost:3000';
+  // Backend base URL: override with --dart-define=BACKEND_BASE_URL=...
+  static const String backendBaseUrl = String.fromEnvironment(
+    'BACKEND_BASE_URL',
+    defaultValue: 'http://192.168.1.148:3000',
+  );
   static const String adaptyApiKey = 'public_live_zmlzwKkz.BICml7z3O3Wsht4mzFA0';
   // Adapty Dashboard → Placements → canlıda kullandığınız placement id
   static const String adaptyPaywallPlacementId = 'outfitly_premium';

@@ -136,6 +136,30 @@ async function persistImageForTryOn({ source, userId, tryOnId, req }) {
   } else {
     throw new Error('Unsupported image source');
   }
+  // Post-process: 1536x2048 dik tuvali COVER ile doldur ve merkezde hizala
+  try {
+    const sharp = require('sharp');
+    const W = 1536; // 3:4 dik kadraj
+    const H = 2048;
+    const bg = { r: 245, g: 243, b: 248, alpha: 1 }; // tema arka planı
+    const composedPath = path.join(dir, `${tryOnId}-framed.jpg`);
+    const src = sharp(targetPath).rotate();
+    const meta = await src.metadata();
+    // cover ile tuvali doldur; overflow varsa yanlardan kırp
+    const resized = await src
+      .resize({ width: W, height: H, fit: 'cover', position: 'centre' })
+      .jpeg({ quality: 90 })
+      .toBuffer();
+    await sharp({ create: { width: W, height: H, channels: 4, background: bg } })
+      .composite([{ input: resized, gravity: 'center' }])
+      .jpeg({ quality: 90 })
+      .toFile(composedPath);
+    // Orijinali yerine framed olanı kullan
+    fs.renameSync(composedPath, targetPath);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(`[TryOn ${tryOnId}] Post-process skipped: ${e.message}`);
+  }
   const relativePath = path.relative(storagePath, targetPath);
   return { relativePath, publicUrl: publicUrlForRequest(targetPath, req) };
 }
