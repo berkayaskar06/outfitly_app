@@ -17,7 +17,7 @@ class OnboardingIntroPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const AppLogo(),
+              // Logo kaldırıldı istenildiği üzere
               const SizedBox(height: 16),
               Text(
                 'Create photorealistic try-ons by combining your portrait with product images. Our AI preserves body proportions and fabric details for confident shopping.',
