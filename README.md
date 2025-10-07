@@ -40,6 +40,42 @@ flutter run --dart-define=BACKEND_BASE_URL=http://localhost:3000
 ```
 Not: Cihaz gerçek cihaz ise bilgisayarın IP’sini verin: `http://192.168.x.x:3000`.
 
+## Gerçek Cihazdan (Telefon) Backend’e Bağlanma
+
+Simülatörde `localhost` çalışır; ancak gerçek bir iPhone/Android cihazda `localhost` cihazın kendisine işaret eder. Yerel ağdan backend’e ulaşmak için:
+
+1) IP’yi bulun: Mac’te Sistem Ayarları → Wi‑Fi → Ayrıntılar → IP adresi (ör. `192.168.1.34`).
+2) Backend’i bu makinede çalıştırın: `npm run dev` (port 3000).
+3) Uygulamayı IP ile çalıştırın:
+   - iOS/Android (Flutter CLI):
+     ```bash
+     cd virtual_try_on_app
+     flutter run --dart-define=BACKEND_BASE_URL=http://192.168.1.34:3000
+     ```
+   - Veya koddan sabitlemek isterseniz `lib/utils/constants.dart` dosyasında `backendBaseUrl` değerini IP’niz ile değiştirin:
+     ```dart
+     // lib/utils/constants.dart
+     static const String backendBaseUrl = 'http://192.168.1.34:3000';
+     ```
+
+Önemli: Telefon ile bilgisayar aynı yerel ağda olmalı ve macOS firewall port 3000’e izin vermelidir (Sistem Ayarları → Ağ → Güvenlik).
+
+## Adapty (Simülatör Notu)
+
+Adapty Paywall Builder UI, iOS Simülatöründe StoreKit Testing etkin değilse ürünleri getiremez ve içerik boş kalabilir. Değerlendiriciler için notlar:
+
+- Xcode → Product → Scheme → Edit Scheme → Run → Options → StoreKit Configuration: `Runner/StoreKit.storekit` seçili olmalı.
+- `StoreKit.storekit` içinde `com.outfitly` ürün kimliği tanımlı ve bir abonelik grubuna bağlı olmalı (Intro Offer opsiyonel).
+- Simülatörde App Store hesabına giriş yapılmamalı (StoreKit Testing ile çakışır).
+
+Eğer StoreKit yapılandırması yoksa uygulama, AdaptyUI’yi göstermeyi dener; ürün bilgileri gelmeyebilir. Gerçek cihazda/StoreKit doğru kurulumda paywall normal görünür.
+
+## Bilinen Durumlar ve İpuçları
+
+- Yerel cihaz testi: `BACKEND_BASE_URL` olarak mutlaka LAN IP kullanın; `localhost` gerçek cihazda çalışmaz.
+- Simülatör: `localhost:3000` çalışır. Backend ayakta değilse istekler hata verir.
+- Android derleme hatası “No space left on device”: Disk alanı açıp `./gradlew clean` veya `flutter clean` + tekrar derleyin.
+
 ## Nasıl Çalışır
 1) Kayıt/Giriş (veya misafir) → onboarding → (opsiyonel) Adapty paywall.
 2) Kişi fotoğrafını ve ürün görselini yükleyin (kategori seçin).
