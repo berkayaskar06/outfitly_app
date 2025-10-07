@@ -36,7 +36,24 @@ class _OnboardingPaywallPageState extends ConsumerState<OnboardingPaywallPage> {
       await Adapty().logShowPaywall(paywall: paywall);
 
       if (paywall.hasViewConfiguration == true) {
-        final view = await AdaptyUI().createPaywallView(paywall: paywall);
+        // Simülatörde Builder UI ürünleri yüklemeyebilir: önce ürünleri çek ve boşsa custom paywall'a git
+        try {
+          final products = await Adapty().getPaywallProducts(paywall: paywall);
+          if (products.isEmpty) {
+            if (!mounted) return;
+            context.go('/paywall');
+            return;
+          }
+        } catch (_) {
+          if (!mounted) return;
+          context.go('/paywall');
+          return;
+        }
+
+        final view = await AdaptyUI().createPaywallView(
+          paywall: paywall,
+          preloadProducts: true,
+        );
         AdaptyUI().setPaywallsEventsObserver(_OnboardingPaywallsObserver(
           onDismiss: () async {
             try {

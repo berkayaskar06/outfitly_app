@@ -110,7 +110,7 @@ class _PaywallPageState extends ConsumerState<PaywallPage> {
           debugPrint('Adapty getPaywallProducts error (preload): $e');
         }
 
-        // Eğer ürün yoksa AdaptyUI yerine doğrudan custom/demo paywall'a düş
+        // Eğer ürün yoksa (özellikle iOS Simulator) AdaptyUI yerine doğrudan custom/demo paywall'a düş
         if (preloadedProducts.isEmpty) {
           setState(() {
             _paywall = paywall;
