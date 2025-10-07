@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../widgets/app_logo.dart';
 
 class OnboardingIntroPage extends ConsumerWidget {
   const OnboardingIntroPage({super.key});
@@ -16,28 +17,7 @@ class OnboardingIntroPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/app_icon.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Your AI Stylist',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+              const AppLogo(),
               const SizedBox(height: 16),
               Text(
                 'Create photorealistic try-ons by combining your portrait with product images. Our AI preserves body proportions and fabric details for confident shopping.',
