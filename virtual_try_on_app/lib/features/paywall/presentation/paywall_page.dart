@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaywallPage extends ConsumerStatefulWidget {
   const PaywallPage({super.key});
@@ -58,11 +59,26 @@ class _PaywallPageState extends ConsumerState<PaywallPage> {
   bool _isLoading = true;
   String? _error;
   AdaptyPaywallProduct? _selectedProduct;
+  int _usedTryOnCount = 0;
+  bool _isFirstLaunch = false;
 
   @override
   void initState() {
     super.initState();
-    _loadPaywall();
+    _bootstrapAndLoad();
+  }
+
+  Future<void> _bootstrapAndLoad() async {
+    // Kullanıcı sayacı ve ilk giriş bilgisini SharedPreferences'tan oku
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _usedTryOnCount = prefs.getInt('used_try_on_count') ?? 0;
+      _isFirstLaunch = !(prefs.getBool('has_launched') ?? false);
+      if (_isFirstLaunch) {
+        await prefs.setBool('has_launched', true);
+      }
+    } catch (_) {}
+    await _loadPaywall();
   }
 
   Future<void> _loadPaywall() async {
@@ -72,18 +88,31 @@ class _PaywallPageState extends ConsumerState<PaywallPage> {
     });
 
     try {
+      // Kurala göre placement seç
+      final String placementId = (_isFirstLaunch || _usedTryOnCount < AppConfig.freeTrialTryOnLimit)
+          ? AppConfig.adaptyFreeTrialPlacementId
+          : AppConfig.adaptyPaywallPlacementId;
+
       // Fetch paywall for placement
       final paywall = await Adapty().getPaywallForDefaultAudience(
-        placementId: AppConfig.adaptyPaywallPlacementId,
+        placementId: placementId,
       );
 
       if (paywall != null) {
         await Adapty().logShowPaywall(paywall: paywall);
 
+        // Ürünleri önceden çek (StoreKit cache için)
+        try {
+          await Adapty().getPaywallProducts(paywall: paywall);
+        } catch (_) {}
+
         // Eğer Paywall Builder konfigürasyonu varsa AdaptyUI ile göster
         if (paywall.hasViewConfiguration == true) {
           try {
-            final view = await AdaptyUI().createPaywallView(paywall: paywall);
+            final view = await AdaptyUI().createPaywallView(
+              paywall: paywall,
+              preloadProducts: true,
+            );
             AdaptyUI().setPaywallsEventsObserver(
               _PaywallsObserver(onDismiss: () => context.go('/')),
             );
